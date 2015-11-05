@@ -7,4 +7,5 @@ It will copy an executable to `/home/<username>/Apps/<appname>` and symlink it t
 ### Usage
 ```bash
 ./installapp /path/to/app dirNameItWillHave executableName
+
 ```
