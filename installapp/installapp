@@ -1,0 +1,31 @@
+#!/bin/bash
+# $1 -> Caminho onde o app está
+# $2 -> Nome da nova pasta
+# $3 -> Nome do executável (na raiz da pasta onde está)
+USER=$(whoami)
+OLD_PATH=$1
+NEW_PATH=/home/$USER/Apps/$2
+EXEC=$3
+EXEC_PATH=$OLDPATH/$EXEC
+BIN_FOLDER=/home/$USER/.local/bin
+
+if [ ! -d "$NEW_PATH" ]; then
+   echo "Creating the app's folder [$NEW_PATH]..."
+   mkdir -p $NEW_PATH
+   echo "Giving it permissions"
+   chmod 771 $NEW_PATH
+   echo "Copying the folder to app's folder"
+   cp -a $OLD_PATH/* $NEW_PATH/
+   echo "Giving it permisson"
+   chmod 771 $NEW_PATH
+   if [ ! -d "$BIN_FOLDER" ]; then
+      echo "Seems that $BIN_FOLDER does not exists, creating..."
+      mkdir -p $BIN_FOLDER
+      echo "Giving it permissions"
+      chmod 771 $BIN_FOLDER
+   fi
+   echo "Linking the executable to $BIN_FOLDER"
+   ln -s "$NEW_PATH/$EXEC" "$BIN_FOLDER/$EXEC"
+else
+   echo "$NEW_PATH already exists, aborting."
+fi
