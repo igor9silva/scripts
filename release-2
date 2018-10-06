@@ -1,0 +1,28 @@
+#!/bin/zsh
+NAME=$1
+FOLDER=$PWD/releases
+APKNAME=$FOLDER/$2
+APKPATH=$PWD/platforms/android/build/outputs/apk/android-armv7-release-unsigned.apk
+
+# Building APK
+echo "Building APK..."
+ionic build android --release
+echo "DONE."
+
+# Create Release folder (if not exists already)
+mkdir -p $FOLDER
+
+# Jar sign
+echo "Jar-signing..."
+~/Apps/JDK/bin/jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore $NAME-key.keystore $APKPATH $NAME
+echo "DONE."
+
+# ZIP align
+echo "ZIP-aligning..."
+$ANDROID_HOME/build-tools/23.0.2/zipalign -v 4 $APKPATH $APKNAME
+echo "DONE."
+
+echo "
+
+
+Release APK is now at: $PWD/$APKNAME"
